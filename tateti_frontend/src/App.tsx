@@ -1,11 +1,10 @@
-import {Board} from "./components/Board";
+import {AppRouter} from "./routers/AppRouter";
 
 function App() {
   return (
-    <div>
-      <h3 className="container">Ta - Te - Ti</h3>
-      <Board />
-    </div>
+    <>
+      <AppRouter />
+    </>
   );
 }
 

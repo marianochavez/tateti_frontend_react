@@ -1,4 +1,4 @@
-import {Player} from "../types";
+import {Player} from "../../types";
 
 interface Props {
   value: Player;
