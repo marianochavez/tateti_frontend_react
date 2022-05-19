@@ -2,6 +2,7 @@ import {Link, useNavigate} from "react-router-dom";
 
 import {signIn} from "../../helpers/authApi";
 import {useForm} from "../../hooks/useForm";
+import {Navbar} from "../ui/Navbar";
 
 interface LoginFormProps {
   lUsername: string;
@@ -40,47 +41,50 @@ export const LoginScreen = () => {
   };
 
   return (
-    <section className="nes-container is-centered">
-      <h2 className="">Login</h2>
-      <p>Ingresar usuario y contraseña!</p>
-      <form className="container" onSubmit={(e) => handleLogin(e)}>
-        <div className="nes-field">
-          {/* <label htmlFor="lUsername">Username</label> */}
-          <input
-            required
-            autoComplete="off"
-            className="nes-input"
-            name="lUsername"
-            placeholder="Usuario"
-            type="text"
-            value={lUsername}
-            onChange={handleInputChange as React.ChangeEventHandler<HTMLInputElement>}
-          />
+    <>
+      <Navbar />
+      <section className="nes-container is-centered">
+        <h2 className="">Login</h2>
+        <p>Ingresar usuario y contraseña!</p>
+        <form className="container" onSubmit={(e) => handleLogin(e)}>
+          <div className="nes-field">
+            {/* <label htmlFor="lUsername">Username</label> */}
+            <input
+              required
+              autoComplete="off"
+              className="nes-input"
+              name="lUsername"
+              placeholder="Usuario"
+              type="text"
+              value={lUsername}
+              onChange={handleInputChange as React.ChangeEventHandler<HTMLInputElement>}
+            />
+          </div>
+
+          <div className="nes-field">
+            {/* <label htmlFor="lPassword">Contraseña</label> */}
+            <input
+              autoComplete="off"
+              className="nes-input"
+              name="lPassword"
+              placeholder="Contraseña"
+              type="password"
+              value={lPassword}
+              onChange={handleInputChange as React.ChangeEventHandler<HTMLInputElement>}
+            />
+          </div>
+
+          <button className="nes-btn" style={{margin: "1em"}} type="submit">
+            Ingresar
+          </button>
+        </form>
+
+        <div>
+          <p>
+            No tienes cuenta? <Link to="/register">Registrarme</Link>
+          </p>
         </div>
-
-        <div className="nes-field">
-          {/* <label htmlFor="lPassword">Contraseña</label> */}
-          <input
-            autoComplete="off"
-            className="nes-input"
-            name="lPassword"
-            placeholder="Contraseña"
-            type="password"
-            value={lPassword}
-            onChange={handleInputChange as React.ChangeEventHandler<HTMLInputElement>}
-          />
-        </div>
-
-        <button className="nes-btn" style={{margin: "1em"}} type="submit">
-          Ingresar
-        </button>
-      </form>
-
-      <div>
-        <p>
-          No tienes cuenta? <Link to="/register">Registrarme</Link>
-        </p>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };

@@ -2,7 +2,7 @@ import {BrowserRouter, Route, Routes, Link} from "react-router-dom";
 
 import {LoginScreen} from "../components/auth/LoginScreen";
 import {RegisterScreen} from "../components/auth/RegisterScreen";
-import {AllBoards} from "../components/board/AllBoards";
+import {Historical} from "../components/board/Historical";
 import {Board} from "../components/board/Board";
 import {Home} from "../components/board/Home";
 
@@ -11,7 +11,7 @@ export const AppRouter = () => {
     <BrowserRouter>
       <Routes>
         <Route element={<Home />} path="/">
-          <Route element={<AllBoards />} path="boards" />
+          <Route element={<Historical />} path="historical" />
           <Route element={<Board />} path="game" />
         </Route>
         <Route element={<LoginScreen />} path="/login" />
@@ -19,7 +19,7 @@ export const AppRouter = () => {
         <Route
           element={
             <main style={{padding: "1rem"}}>
-              <p>There&apos;s nothing here!</p>
+              <p>No hay nada por aqui! 404 :(</p>
               <Link to="/">Ir al inicio</Link>
             </main>
           }

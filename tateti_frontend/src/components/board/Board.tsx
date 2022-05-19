@@ -1,74 +1,59 @@
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-import calculateWinner from "../../helpers/calculateWinner";
-import {Player} from "../../types";
+import {play} from "../../helpers/boardApi";
 
-import {Score} from "./Score";
 import {Square} from "./Square";
 
 export const Board = () => {
+  const navigate = useNavigate();
   const [board, setBoard] = useState(
-    localStorage.getItem("board") ? JSON.parse(localStorage.getItem("board") || "{}") : {},
+    localStorage.getItem("board")
+      ? JSON.parse(localStorage.getItem("board") || "{}")
+      : navigate("/"),
   );
+  const players = localStorage.getItem("players")
+    ? JSON.parse(localStorage.getItem("players") as string)
+    : navigate("/login");
   const [squares, setSquares] = useState(board.table);
   const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">(board.turn);
   const [winner, setWinner] = useState(board.winner);
-  const [players, setPlayers] = useState(
-    localStorage.getItem("players") ? JSON.parse(localStorage.getItem("players") as string) : {},
-  );
 
-  // useEffect(() => {
-  //   const persistPlayers = localStorage.getItem("players");
+  useEffect(() => {
+    const persistBoard = localStorage.getItem("board");
 
-  //   if (persistPlayers) setPlayers(JSON.parse(persistPlayers));
-  // }, [setPlayers]);
+    if (persistBoard) setBoard(JSON.parse(persistBoard));
+  }, [setBoard]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("players", JSON.stringify(players));
-  // }, [players]);
+  useEffect(() => {
+    localStorage.setItem("board", JSON.stringify(board));
+  }, [board]);
 
-  const setSquareValue = (index: number) => {
-    const newData = squares.map((value, i) => {
-      if (i === index) {
-        return currentPlayer;
-      }
+  const setSquareValue = async (index: number) => {
+    const playerTurn =
+      currentPlayer === "X" ? players[Object.keys(players)[0]] : players[Object.keys(players)[1]];
 
-      return value;
-    });
+    const playerPlay = await play(board.id, playerTurn.token, index);
 
-    setSquares(newData);
-    setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    if (playerPlay.board) {
+      setBoard(playerPlay.board);
+      setSquares(playerPlay.board.table);
+      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    } else {
+      // eslint-disable-next-line no-console
+      console.log(playerPlay);
+    }
   };
 
-  // function reset() {
-  //   setSquares(Array(9).fill(null));
-  //   setWinner(null);
-  //   setCurrentPlayer(Math.round(Math.random() * 1) === 1 ? "X" : "O");
-  // }
+  useEffect(() => {
+    if (board.winner) setWinner(board.winner);
+    if (board.state === "Draw") setWinner("Draw");
+  }, [board]);
 
-  // useEffect(() => {
-  //   const winner = calculateWinner(squares);
-
-  //   if (winner) {
-  //     setWinner(winner);
-
-  //     setPlayers({
-  //       player1: {
-  //         ...players.player1,
-  //         score: winner === "X" ? players.player1.score + 1 : players.player1.score,
-  //       },
-  //       player2: {
-  //         ...players.player2,
-  //         score: winner === "O" ? players.player2.score + 1 : players.player2.score,
-  //       },
-  //     });
-  //   }
-
-  //   if (!winner && !squares.filter((square) => !square).length) {
-  //     setWinner("BOTH");
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [squares]);
+  const handleReset = () => {
+    localStorage.removeItem("board");
+    navigate("/");
+  };
 
   return (
     <div className="container main-cointainer">
@@ -93,11 +78,13 @@ export const Board = () => {
               );
             })}
         </div>
-        {/* <div className="container">
-          <button className="nes-btn is-warning" onClick={reset}>
-            Reset
-          </button>
-        </div> */}
+        <div className="container">
+          {winner && (
+            <button className="nes-btn is-warning" onClick={handleReset}>
+              Volver a jugar
+            </button>
+          )}
+        </div>
       </div>
 
       {/* <Score
