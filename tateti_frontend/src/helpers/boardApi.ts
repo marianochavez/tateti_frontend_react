@@ -57,12 +57,30 @@ export const play = async (boardId: number, token: string, position: number) => 
   }
 };
 
-export const historical = async (idPlayer1: number, idPlayer2: number) => {
+export const historical = async (idPlayer1: number, idPlayer2: number): Promise<any> => {
   try {
     const response = await axios.post(`http://localhost:8080/api/v1/boards/historical`, {
       id_1: idPlayer1,
       id_2: idPlayer2,
     });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const leave = async (boardId: number, token: string) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:8080/api/v1/boards/${boardId}/leave`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     return response.data;
   } catch (error) {

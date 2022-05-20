@@ -1,8 +1,9 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
+import {useContext, useState} from "react";
 
-import {signIn} from "../../helpers/authApi";
 import {useForm} from "../../hooks/useForm";
 import {Navbar} from "../ui/Navbar";
+import {UserContext} from "../providers/UserProvider";
 
 interface LoginFormProps {
   lUsername: string;
@@ -15,40 +16,41 @@ export const LoginScreen = () => {
     lPassword: "",
   } as LoginFormProps);
   const navigate = useNavigate();
+  const {players, isLogged, isLogged2, login} = useContext(UserContext);
+  const [error, setError] = useState("");
 
   const {lUsername, lPassword} = formValues as LoginFormProps;
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await signIn(lUsername, lPassword);
+    if (players[parseInt(Object.keys(players)[0])]?.username === lUsername) {
+      setError("El usuario ya está logeado!");
+
+      return;
+    }
+
+    const res = await login(lUsername, lPassword);
 
     if (res) {
-      const localData = JSON.parse(localStorage.getItem("players") || "{}");
-
-      localStorage.setItem(
-        "players",
-        JSON.stringify({
-          ...localData,
-          [res.data.id]: {
-            username: res.data.username,
-            name: res.data.name,
-            token: res.data.token,
-          },
-        }),
-      );
       navigate("/");
+    } else {
+      setError("Usuario o contraseña incorrectos");
     }
   };
+
+  if (isLogged && isLogged2) {
+    return <Navigate replace to="/" />;
+  }
 
   return (
     <>
       <Navbar />
       <section className="nes-container is-centered">
         <h2 className="">Login</h2>
-        <p>Ingresar usuario y contraseña!</p>
+        {!error && <p>Ingresar usuario y contraseña!</p>}
+        {error && <p style={{color: "red"}}>{error}</p>}
         <form className="container" onSubmit={(e) => handleLogin(e)}>
           <div className="nes-field">
-            {/* <label htmlFor="lUsername">Username</label> */}
             <input
               required
               autoComplete="off"
@@ -62,7 +64,6 @@ export const LoginScreen = () => {
           </div>
 
           <div className="nes-field">
-            {/* <label htmlFor="lPassword">Contraseña</label> */}
             <input
               autoComplete="off"
               className="nes-input"

@@ -16,7 +16,7 @@ export const signIn = async (username: string, password: string) => {
   }
 };
 
-export const logout = async (token: string) => {
+export const singOut = async (token: string) => {
   try {
     const response = await axios.post(
       `http://localhost:8080/api/v1/users/sign-out`,
@@ -29,6 +29,28 @@ export const logout = async (token: string) => {
     );
 
     return response.status === 200;
+  } catch (error) {
+    console.log(error);
+
+    return false;
+  }
+};
+
+export const createUser = async (
+  username: string,
+  name: string,
+  password: string,
+  confirmPassword: string,
+) => {
+  try {
+    const response = await axios.post(`http://localhost:8080/api/v1/users`, {
+      username,
+      name,
+      password,
+      confirmPassword,
+    });
+
+    return response.data;
   } catch (error) {
     console.log(error);
 
