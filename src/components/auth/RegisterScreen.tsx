@@ -44,7 +44,7 @@ export const RegisterScreen = () => {
   return (
     <>
       <Navbar />
-      <section className="nes-container is-centered">
+      <section className="nes-container is-centered animate__animated animate__fadeIn animate__slow">
         <h2 className="">Registro</h2>
         {!error && <p>El usuario debe ser único!</p>}
         {error && <p style={{color: "red"}}>{error}</p>}

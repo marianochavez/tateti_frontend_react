@@ -1,8 +1,6 @@
-import {Player} from "../../types";
-
 interface Props {
-  value: Player;
-  winner: Player;
+  value: string | null;
+  winner: string | null;
   onClick: () => void;
 }
 
@@ -22,7 +20,7 @@ export const Square = ({value, onClick, winner}: Props): JSX.Element => {
   return (
     <button
       disabled
-      className={`nes-btn nes-btn-square square square_${value.toLocaleLowerCase()}`}
+      className={`nes-btn nes-btn-square square square_${value.toLocaleLowerCase()} animate__animated animate__flipInY animate__faster`}
     >
       {value}
     </button>

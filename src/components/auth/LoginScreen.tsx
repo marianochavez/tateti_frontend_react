@@ -45,7 +45,7 @@ export const LoginScreen = () => {
   return (
     <>
       <Navbar />
-      <section className="nes-container is-centered">
+      <section className="nes-container is-centered animate__animated animate__fadeIn animate__slow">
         <h2 className="">Login</h2>
         {!error && <p>Ingresar usuario y contraseña!</p>}
         {error && <p style={{color: "red"}}>{error}</p>}

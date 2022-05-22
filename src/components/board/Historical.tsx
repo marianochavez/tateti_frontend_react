@@ -25,29 +25,31 @@ export const Historical = () => {
 
   return (
     <div className="container">
-      <h4>
+      <h4 className="animate__animated animate__fadeIn animate__slow">
         <i className="nes-icon trophy is-s" />
         Historial
         <i className="nes-icon trophy" />
       </h4>
-      <div className="nes-table-responsive">
-        <table className="nes-table is-bordered is-centered">
-          <thead>
-            <tr>
-              <th>Tabla</th>
-              <th>Ganador</th>
-            </tr>
-          </thead>
-          <tbody>
-            {historical.map((historial) => (
-              <tr key={historial.id}>
-                <td>{historial.id}</td>
-                <td>{historial.winner ? historial.winner : "Abandonada"}</td>
+      {historical.length > 0 && (
+        <div className="nes-table-responsive animate__animated animate__fadeIn animate__slow">
+          <table className="nes-table is-bordered is-centered">
+            <thead>
+              <tr>
+                <th>Tabla</th>
+                <th>Ganador</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {historical.map((historial) => (
+                <tr key={historial.id}>
+                  <td>{historial.id}</td>
+                  <td>{historial.winner ? historial.winner : "Abandonada"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

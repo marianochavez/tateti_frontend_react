@@ -36,7 +36,10 @@ export const Home = () => {
   return (
     <>
       <Navbar />
-      <div className="container " style={{padding: "2em"}}>
+      <div
+        className="container animate__animated animate__fadeIn animate__slow"
+        style={{padding: "2em"}}
+      >
         {isLogged && isLogged2 && !isBoardCreated && currentPath == "/" && (
           <button className="nes-btn is-success" onClick={handleCreateBoard}>
             Nuevo juego

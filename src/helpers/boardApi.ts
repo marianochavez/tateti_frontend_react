@@ -4,7 +4,7 @@ import axios from "axios";
 export const createBoard = async (token: string) => {
   try {
     const response = await axios.post(
-      "http://localhost:8080/api/v1/boards",
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards`,
       {},
       {
         headers: {
@@ -22,7 +22,7 @@ export const createBoard = async (token: string) => {
 export const joinGame = async (boardId: number, token: string) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/v1/boards/${boardId}/join-game`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}/join-game`,
       {},
       {
         headers: {
@@ -40,7 +40,7 @@ export const joinGame = async (boardId: number, token: string) => {
 export const play = async (boardId: number, token: string, position: number) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/v1/boards/${boardId}/play`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}/play`,
       {
         index: position,
       },
@@ -59,10 +59,13 @@ export const play = async (boardId: number, token: string, position: number) => 
 
 export const historical = async (idPlayer1: number, idPlayer2: number): Promise<any> => {
   try {
-    const response = await axios.post(`http://localhost:8080/api/v1/boards/historical`, {
-      id_1: idPlayer1,
-      id_2: idPlayer2,
-    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/historical`,
+      {
+        id_1: idPlayer1,
+        id_2: idPlayer2,
+      },
+    );
 
     return response.data;
   } catch (error) {
@@ -73,7 +76,7 @@ export const historical = async (idPlayer1: number, idPlayer2: number): Promise<
 export const leave = async (boardId: number, token: string) => {
   try {
     const response = await axios.put(
-      `http://localhost:8080/api/v1/boards/${boardId}/leave`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}/leave`,
       {},
       {
         headers: {

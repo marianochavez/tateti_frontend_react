@@ -39,40 +39,42 @@ export const Board = () => {
   }
 
   return (
-    <div className="container main-cointainer">
-      <div>
-        <p className="nes-balloon from-right nes-pointer">
-          {!winner &&
-            `${
-              currentPlayer === "X"
-                ? players[parseInt(Object.keys(players)[0])].name
-                : players[parseInt(Object.keys(players)[1])].name
-            },es tu turno!`}
-          {winner && winner !== "Draw" && `Ganaste ${winner}!`}
-          {winner && winner === "Draw" && "Empate!"}
-        </p>
+    <div className="container main-cointainer animate__animated animate__fadeIn animate__slow">
+      <p
+        className={`nes-balloon from-right nes-pointer ${
+          winner && "animate__animated animate__tada"
+        }`}
+      >
+        {!winner &&
+          `${
+            currentPlayer === "X"
+              ? players[parseInt(Object.keys(players)[0])].name
+              : players[parseInt(Object.keys(players)[1])].name
+          },es tu turno!`}
+        {winner && winner !== "Empate" && `Ganaste ${winner}!`}
+        {winner && winner === "Empate" && "Empate!"}
+      </p>
 
-        <div className="grid">
-          {Array(9)
-            .fill(null)
-            .map((_, index) => {
-              return (
-                <Square
-                  key={index}
-                  value={squares[index]}
-                  winner={winner}
-                  onClick={() => handlePlay(index)}
-                />
-              );
-            })}
-        </div>
-        <div className="container">
-          {winner && (
-            <button className="nes-btn is-warning" onClick={handleReset}>
-              Volver a jugar
-            </button>
-          )}
-        </div>
+      <div className="grid">
+        {Array(9)
+          .fill(null)
+          .map((_, index) => {
+            return (
+              <Square
+                key={index}
+                value={squares[index]}
+                winner={winner}
+                onClick={() => handlePlay(index)}
+              />
+            );
+          })}
+      </div>
+      <div className="container">
+        {winner && (
+          <button className="nes-btn is-warning" onClick={handleReset}>
+            Volver a jugar
+          </button>
+        )}
       </div>
     </div>
   );

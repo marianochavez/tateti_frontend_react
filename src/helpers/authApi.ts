@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const signIn = async (username: string, password: string) => {
   try {
-    const response = await axios.post(`http://localhost:8080/api/v1/users/sign-in`, {
+    const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/users/sign-in`, {
       username,
       password,
     });
@@ -19,7 +19,7 @@ export const signIn = async (username: string, password: string) => {
 export const singOut = async (token: string) => {
   try {
     const response = await axios.post(
-      `http://localhost:8080/api/v1/users/sign-out`,
+      `${import.meta.env.VITE_REACT_APP_API_URL}/users/sign-out`,
       {},
       {
         headers: {
@@ -43,7 +43,7 @@ export const createUser = async (
   confirmPassword: string,
 ) => {
   try {
-    const response = await axios.post(`http://localhost:8080/api/v1/users`, {
+    const response = await axios.post(`${import.meta.env.VITE_REACT_APP_API_URL}/users`, {
       username,
       name,
       password,
