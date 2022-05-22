@@ -58,7 +58,7 @@ export const BoardProvider = ({children}: Props) => {
   const [board, setBoard] = useState<Board>(JSON.parse(localStorage.getItem("board") || "{}"));
   const [isBoardCreated, setIsBoardCreated] = useState<boolean>(board.id ? true : false);
   const [isBoardJoined, setIsBoardJoined] = useState<boolean>(
-    board.state !== "Qeue" ? true : false,
+    (board.state !== "Queue" ? true : false) || false,
   );
   const [squares, setSquares] = useState<(string | null)[]>(board.table || []);
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(board.turn || null);
@@ -91,8 +91,6 @@ export const BoardProvider = ({children}: Props) => {
   };
 
   const userJoinGame = async (id: number, token: string) => {
-    if (isBoardJoined) return;
-
     const res = await joinGame(id, token);
 
     if (res) {

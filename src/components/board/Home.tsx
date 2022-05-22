@@ -9,8 +9,15 @@ export const Home = () => {
   const navigate = useNavigate();
   const currentPath = useLocation().pathname;
   const {players, isLogged, isLogged2, logout} = useContext(UserContext);
-  const {isBoardCreated, isBoardJoined, leaveBoard, clearBoard, userCreateBoard, userJoinGame} =
-    useContext(BoardContext);
+  const {
+    board,
+    isBoardCreated,
+    isBoardJoined,
+    leaveBoard,
+    clearBoard,
+    userCreateBoard,
+    userJoinGame,
+  } = useContext(BoardContext);
 
   const handleCreateBoard = async () => {
     // create a new board
@@ -33,6 +40,11 @@ export const Home = () => {
     logout(index);
   };
 
+  const handleJoinBoard = async () => {
+    // if player 2 is not joined to board
+    await userJoinGame(board.id, players[parseInt(Object.keys(players)[1])].token);
+  };
+
   return (
     <>
       <Navbar />
@@ -49,6 +61,11 @@ export const Home = () => {
           <Link className="nes-btn is-success" to="/game">
             Volver al juego
           </Link>
+        )}
+        {isBoardCreated && !isBoardJoined && currentPath === "/" && (
+          <button className="nes-btn is-warning" onClick={handleJoinBoard}>
+            Unir jugador 2
+          </button>
         )}
         {isLogged && !isLogged2 && (
           <Link className="nes-btn is-warning" to="/login">
