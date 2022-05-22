@@ -105,7 +105,13 @@ export const UserProvider = ({children}: Props) => {
     password: string,
     confirmPassword: string,
   ) => {
-    await createUser(username, name, password, confirmPassword);
+    try {
+      const res = await createUser(username, name, password, confirmPassword);
+
+      return res.data;
+    } catch (err) {
+      return false;
+    }
   };
 
   return (

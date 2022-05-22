@@ -58,7 +58,7 @@ export const Home = () => {
           </button>
         )}
         {isBoardCreated && isBoardJoined && currentPath === "/" && (
-          <Link className="nes-btn is-success" to="/game">
+          <Link className="nes-btn is-warning" to="/game">
             Volver al juego
           </Link>
         )}
@@ -69,22 +69,22 @@ export const Home = () => {
         )}
         {isLogged && !isLogged2 && (
           <Link className="nes-btn is-warning" to="/login">
-            Logear jugador 2
+            Loguear jugador 2
           </Link>
         )}
         {!isLogged && !isLogged2 && (
           <Link className="nes-btn is-warning" to="/login">
-            Logear jugador 1
+            Iniciar sesión
           </Link>
         )}
         {isLogged && currentPath === "/" && (
           <button className="nes-btn is-error" onClick={() => handleLogout(0)}>
-            {`Deslogear ${players[parseInt(Object.keys(players)[0])]?.name || "jugador 1"}`}
+            {`Salir ${players[parseInt(Object.keys(players)[0])]?.name || "jugador 1"}`}
           </button>
         )}
         {isLogged2 && currentPath === "/" && (
           <button className="nes-btn is-error" onClick={() => handleLogout(1)}>
-            {`Deslogear ${players[parseInt(Object.keys(players)[1])]?.name || "jugador 2"}`}
+            {`Salir ${players[parseInt(Object.keys(players)[1])]?.name || "jugador 2"}`}
           </button>
         )}
       </div>
