@@ -7,15 +7,15 @@ import {BoardContext} from "../providers/BoardProvider";
 import {Square} from "./Square";
 
 export const Historical = () => {
-  const {players, isLogged, isLogged2} = useContext(UserContext);
+  const {player, isLogged} = useContext(UserContext);
   const {getHistorical} = useContext(BoardContext);
   const [historical, setHistorical] = useState<any[]>([]);
   const [showBoard, setShowBoard] = useState(historical[0]);
 
   useEffect(() => {
     const historial = getHistorical(
-      parseInt(Object.keys(players)[0]),
-      parseInt(Object.keys(players)[1]),
+      parseInt(Object.keys(player)[0]),
+      parseInt(Object.keys(player)[1]),
     );
 
     historial.then((res) => {
@@ -31,7 +31,7 @@ export const Historical = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!isLogged || !isLogged2) return <Navigate replace to="/" />;
+  if (!isLogged) return <Navigate replace to="/" />;
 
   const handleInputChange = (e: any) => {
     setShowBoard(

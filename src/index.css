@@ -103,7 +103,15 @@ i.nes-icon{
   margin-top: 1em;
 }
 
-button.is-warning{
+button.is-warning {
+  margin-top: 1em;
+}
+
+button.is-success {
+  margin-top: 1em;
+}
+
+button.is-primary {
   margin-top: 1em;
 }
 

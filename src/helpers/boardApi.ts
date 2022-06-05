@@ -19,11 +19,13 @@ export const createBoard = async (token: string) => {
   }
 };
 
-export const joinGame = async (boardId: number, token: string) => {
+export const joinGame = async (token: string, boardToken: string) => {
   try {
     const response = await axios.put(
-      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}/join-game`,
-      {},
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/join-game`,
+      {
+        token: boardToken,
+      },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,6 +80,23 @@ export const leave = async (boardId: number, token: string) => {
     const response = await axios.put(
       `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}/leave`,
       {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const show = async (boardId: number, token: string) => {
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_REACT_APP_API_URL}/boards/${boardId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

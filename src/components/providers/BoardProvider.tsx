@@ -1,8 +1,8 @@
 import {createContext, useEffect, useState} from "react";
 
-import {createBoard, historical, joinGame, leave, play} from "../../helpers/boardApi";
+import {createBoard, historical, joinGame, leave, play, show} from "../../helpers/boardApi";
 
-import {Players} from "./UserProvider";
+import {Player} from "./UserProvider";
 
 interface Board {
   id: number;
@@ -10,6 +10,9 @@ interface Board {
   state: string;
   winner: string | null;
   turn: string;
+  token: string;
+  X: string;
+  O: string;
 }
 
 interface BoardContext {
@@ -19,13 +22,14 @@ interface BoardContext {
   squares: (string | null)[];
   currentPlayer: string | null;
   winner: string | null;
-  playIn: (index: number, players: Players) => void;
+  playIn: (index: number, players: Player) => void;
   clearBoard: () => void;
   checkWinner: () => void;
   getHistorical: (id1: number, id2: number) => Promise<any>;
   leaveBoard: (token: string) => Promise<any>;
   userCreateBoard: (token: string) => Promise<any>;
-  userJoinGame: (id: number, token: string) => Promise<any>;
+  userJoinGame: (token: string, boardToken: string) => Promise<any>;
+  checkBoard: (token: string) => Promise<any>;
 }
 
 interface Props {
@@ -39,6 +43,9 @@ export const BoardContext = createContext<BoardContext>({
     state: "",
     winner: null,
     turn: "",
+    token: "",
+    X: "",
+    O: "",
   },
   isBoardCreated: false,
   isBoardJoined: false,
@@ -52,13 +59,14 @@ export const BoardContext = createContext<BoardContext>({
   leaveBoard: () => Promise.resolve(),
   userCreateBoard: () => Promise.resolve(),
   userJoinGame: () => Promise.resolve(),
+  checkBoard: () => Promise.resolve(),
 });
 
 export const BoardProvider = ({children}: Props) => {
   const [board, setBoard] = useState<Board>(JSON.parse(localStorage.getItem("board") || "{}"));
   const [isBoardCreated, setIsBoardCreated] = useState<boolean>(board.id ? true : false);
   const [isBoardJoined, setIsBoardJoined] = useState<boolean>(
-    (board.state !== "Queue" ? true : false) || false,
+    (board.state === "Playing" ? true : false) || false,
   );
   const [squares, setSquares] = useState<(string | null)[]>(board.table || []);
   const [currentPlayer, setCurrentPlayer] = useState<string | null>(board.turn || null);
@@ -90,12 +98,13 @@ export const BoardProvider = ({children}: Props) => {
     }
   };
 
-  const userJoinGame = async (id: number, token: string) => {
-    const res = await joinGame(id, token);
+  const userJoinGame = async (token: string, boardToken: string) => {
+    const res = await joinGame(token, boardToken);
 
     if (res) {
       setBoard(res.data);
       setIsBoardJoined(true);
+      setIsBoardCreated(true);
 
       return res;
     } else {
@@ -103,11 +112,8 @@ export const BoardProvider = ({children}: Props) => {
     }
   };
 
-  const playIn = async (index: number, players: Players) => {
-    const playerTurn =
-      currentPlayer === "X"
-        ? players[parseInt(Object.keys(players)[0])]
-        : players[parseInt(Object.keys(players)[1])];
+  const playIn = async (index: number, player: Player) => {
+    const playerTurn = player[parseInt(Object.keys(player)[0])];
 
     const playerPlay = await play(board.id, playerTurn.token, index);
 
@@ -126,15 +132,18 @@ export const BoardProvider = ({children}: Props) => {
   };
 
   const clearBoard = () => {
+    setIsBoardCreated(false);
+    setIsBoardJoined(false);
     setBoard({
       id: 0,
       table: [],
       state: "",
       winner: null,
       turn: "",
+      token: "",
+      X: "",
+      O: "",
     });
-    setIsBoardCreated(false);
-    setIsBoardJoined(false);
     setSquares([]);
     setCurrentPlayer(null);
     setWinner(null);
@@ -159,6 +168,20 @@ export const BoardProvider = ({children}: Props) => {
     }
   };
 
+  const checkBoard = async (token: string) => {
+    const check = await show(board.id, token);
+
+    if (check) {
+      setBoard({...check.board, X: check.X, O: check.O});
+      setSquares(check.board.table);
+      if (check.board.state === "Playing") setIsBoardJoined(true);
+
+      return check;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <BoardContext.Provider
       value={{
@@ -175,6 +198,7 @@ export const BoardProvider = ({children}: Props) => {
         leaveBoard,
         userCreateBoard,
         userJoinGame,
+        checkBoard,
       }}
     >
       {children}
