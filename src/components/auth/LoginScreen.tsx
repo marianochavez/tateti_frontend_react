@@ -16,14 +16,14 @@ export const LoginScreen = () => {
     lPassword: "",
   } as LoginFormProps);
   const navigate = useNavigate();
-  const {players, isLogged, isLogged2, login} = useContext(UserContext);
+  const {player, isLogged, login} = useContext(UserContext);
   const [error, setError] = useState("");
 
   const {lUsername, lPassword} = formValues as LoginFormProps;
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (players[parseInt(Object.keys(players)[0])]?.username === lUsername) {
+    if (player[parseInt(Object.keys(player)[0])]?.username === lUsername) {
       setError("El usuario ya está logeado!");
 
       return;
@@ -38,7 +38,7 @@ export const LoginScreen = () => {
     }
   };
 
-  if (isLogged && isLogged2) {
+  if (isLogged) {
     return <Navigate replace to="/" />;
   }
 

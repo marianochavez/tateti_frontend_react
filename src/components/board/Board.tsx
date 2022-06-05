@@ -8,17 +8,9 @@ import {Square} from "./Square";
 
 export const Board = () => {
   const navigate = useNavigate();
-  const {
-    squares,
-    currentPlayer,
-    winner,
-    isBoardCreated,
-    isBoardJoined,
-    playIn,
-    clearBoard,
-    checkWinner,
-  } = useContext(BoardContext);
-  const {players} = useContext(UserContext);
+  const {board, squares, winner, isBoardCreated, isBoardJoined, playIn, clearBoard, checkWinner} =
+    useContext(BoardContext);
+  const {player} = useContext(UserContext);
 
   useEffect(() => {
     checkWinner();
@@ -26,7 +18,7 @@ export const Board = () => {
   }, [squares]);
 
   const handlePlay = (index: number) => {
-    playIn(index, players);
+    playIn(index, player);
   };
 
   const handleReset = () => {
@@ -45,12 +37,7 @@ export const Board = () => {
           winner && "animate__animated animate__tada"
         }`}
       >
-        {!winner &&
-          `${
-            currentPlayer === "X"
-              ? players[parseInt(Object.keys(players)[0])].name
-              : players[parseInt(Object.keys(players)[1])].name
-          },es tu turno!`}
+        {!winner && `${board.turn === "X" ? board.X || "..." : board.O || "..."},es tu turno!`}
         {winner && winner !== "Empate" && `Ganaste ${winner}!`}
         {winner && winner === "Empate" && "Empate!"}
       </p>

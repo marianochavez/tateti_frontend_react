@@ -4,7 +4,7 @@ import {useContext} from "react";
 import {UserContext} from "../providers/UserProvider";
 
 export const Navbar = () => {
-  const {isLogged, isLogged2} = useContext(UserContext);
+  const {isLogged} = useContext(UserContext);
   const currentPath = useLocation().pathname;
 
   return (
@@ -22,14 +22,14 @@ export const Navbar = () => {
               </Link>
             </li>
           )}
-          {isLogged && isLogged2 && currentPath === "/" && (
+          {isLogged && currentPath === "/" && (
             <li className="li-nav">
               <Link className="link" to="/historical">
                 <p className="animate__animated animate__fadeIn animate__slow">Historial</p>
               </Link>
             </li>
           )}
-          {(!isLogged || !isLogged2) && currentPath === "/" && (
+          {!isLogged && currentPath === "/" && (
             <li className="li-nav">
               <Link className="link" to="/register">
                 <p className="animate__animated animate__fadeIn animate__slow">Registrarme</p>

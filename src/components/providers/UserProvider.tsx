@@ -3,7 +3,7 @@ import {useState, useEffect} from "react";
 
 import {createUser, signIn, singOut} from "../../helpers/authApi";
 
-export interface Players {
+export interface Player {
   [key: number]: {
     token: string;
     name: string;
@@ -16,9 +16,8 @@ interface Props {
 }
 
 interface PlayerContext {
-  players: Players;
+  player: Player;
   isLogged: boolean;
-  isLogged2: boolean;
   login: (username: string, password: string) => Promise<boolean>;
   logout: (num: number) => void;
   register: (
@@ -30,48 +29,41 @@ interface PlayerContext {
 }
 
 export const UserContext = createContext<PlayerContext>({
-  players: {},
+  player: {},
   isLogged: false,
-  isLogged2: false,
   login: () => Promise.resolve(false),
   logout: () => {},
   register: () => Promise.resolve(false),
 });
 
 export const UserProvider = ({children}: Props) => {
-  const [players, setPlayers] = useState<Players>(
-    JSON.parse(localStorage.getItem("players") || "{}"),
-  );
+  const [player, setPlayer] = useState<Player>(JSON.parse(localStorage.getItem("player") || "{}"));
   const [isLogged, setIsLogged] = useState<boolean>(
-    players[parseInt(Object.keys(players)[0])] ? true : false,
-  );
-  const [isLogged2, setIsLogged2] = useState<boolean>(
-    players[parseInt(Object.keys(players)[1])] ? true : false,
+    player[parseInt(Object.keys(player)[0])] ? true : false,
   );
 
   useEffect(() => {
-    const playersData = JSON.parse(localStorage.getItem("players") || "{}");
+    const playerData = JSON.parse(localStorage.getItem("player") || "{}");
 
-    if (playersData) setPlayers(playersData);
+    if (playerData) setPlayer(playerData);
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("players", JSON.stringify(players));
-  }, [players]);
+    localStorage.setItem("player", JSON.stringify(player));
+  }, [player]);
 
   const login = async (username: string, password: string) => {
     const res = await signIn(username, password);
 
     if (res) {
-      setPlayers({
-        ...players,
+      setPlayer({
         [res.data.id]: {
           username: res.data.username,
           name: res.data.name,
           token: res.data.token,
         },
       });
-      isLogged ? setIsLogged2(true) : setIsLogged(true);
+      setIsLogged(true);
 
       return true;
     } else {
@@ -80,22 +72,13 @@ export const UserProvider = ({children}: Props) => {
   };
 
   const logout = async (id: number) => {
-    const player = parseInt(Object.keys(players)[id]);
+    const pl = parseInt(Object.keys(player)[id]);
 
-    const logoutPl = await singOut(players[player].token);
+    const logoutPl = await singOut(player[pl].token);
 
     if (logoutPl) {
-      // delete the player from the players object
-      const newPlayers = {...players};
-
-      delete newPlayers[player];
-      setPlayers(newPlayers);
-
-      // setLogged to false
-      if (Object.keys(newPlayers).length === 0) {
-        setIsLogged(false);
-        setIsLogged2(false);
-      } else setIsLogged2(false);
+      setPlayer({});
+      setIsLogged(false);
     }
   };
 
@@ -117,9 +100,8 @@ export const UserProvider = ({children}: Props) => {
   return (
     <UserContext.Provider
       value={{
-        players,
+        player,
         isLogged,
-        isLogged2,
         login,
         logout,
         register,
