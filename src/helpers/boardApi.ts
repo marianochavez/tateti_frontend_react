@@ -59,13 +59,13 @@ export const play = async (boardId: number, token: string, position: number) => 
   }
 };
 
-export const historical = async (idPlayer1: number, idPlayer2: number): Promise<any> => {
+export const historical = async (username1: string, username2: string): Promise<any> => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_REACT_APP_API_URL}/boards/historical`,
       {
-        id_1: idPlayer1,
-        id_2: idPlayer2,
+        username_1: username1,
+        username_2: username2,
       },
     );
 
