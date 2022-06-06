@@ -11,12 +11,10 @@ export const Historical = () => {
   const {getHistorical} = useContext(BoardContext);
   const [historical, setHistorical] = useState<any[]>([]);
   const [showBoard, setShowBoard] = useState(historical[0]);
+  const username1 = player[parseInt(Object.keys(player)[0])].username;
 
   useEffect(() => {
-    const historial = getHistorical(
-      parseInt(Object.keys(player)[0]),
-      parseInt(Object.keys(player)[1]),
-    );
+    const historial = getHistorical(username1, "");
 
     historial.then((res) => {
       const historialFilter = res.data
@@ -34,9 +32,26 @@ export const Historical = () => {
   if (!isLogged) return <Navigate replace to="/" />;
 
   const handleInputChange = (e: any) => {
-    setShowBoard(
-      historical.find((board: any) => board.id === parseInt(e.target.value)) || historical[0],
-    );
+    if (e.target.name === "username") {
+      const historial = getHistorical(username1, e.target.value);
+
+      historial.then((res) => {
+        const historialFilter = res.data
+          .filter((board: any) => board.state !== "Playing")
+          .sort((a: any, b: any) => {
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          });
+
+        setHistorical(historialFilter);
+        setShowBoard(historialFilter[0]);
+      });
+    }
+
+    if (e.target.name === "boardId") {
+      setShowBoard(
+        historical.find((board: any) => board.id === parseInt(e.target.value)) || historical[0],
+      );
+    }
   };
 
   return (
@@ -55,7 +70,17 @@ export const Historical = () => {
           <div style={{margin: "10px"}}>
             <input
               className="nes-input"
-              placeholder="Buscar partida..."
+              name="username"
+              placeholder="Contrincante..."
+              type="text"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div style={{margin: "10px"}}>
+            <input
+              className="nes-input"
+              name="boardId"
+              placeholder="ID de partida..."
               type="text"
               onChange={handleInputChange}
             />

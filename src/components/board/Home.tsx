@@ -1,4 +1,4 @@
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {Link, useLocation} from "react-router-dom";
 
 import {Navbar} from "../ui/Navbar";
@@ -16,6 +16,7 @@ export const Home = () => {
     boardToken: "",
   } as TokenForm);
   const {boardToken} = formValues as TokenForm;
+  const [error, setError] = useState(false);
   const {player, isLogged, logout} = useContext(UserContext);
   const {
     board,
@@ -39,7 +40,10 @@ export const Home = () => {
   };
 
   const handleJoinBoard = async () => {
-    await userJoinGame(player[parseInt(Object.keys(player)[0])].token, boardToken);
+    if (boardToken.length === 0) return;
+    const res = await userJoinGame(player[parseInt(Object.keys(player)[0])].token, boardToken);
+
+    !res ? setError(true) : setError(false);
     handleCheckBoard();
   };
 
@@ -75,7 +79,7 @@ export const Home = () => {
           <div className="container">
             <label htmlFor="token_field">Unirse a partida</label>
             <input
-              className="nes-input"
+              className={`nes-input ${error && "animate__animated animate__shakeX is-error"}`}
               id="token_field"
               name="boardToken"
               placeholder="Ingresar código"
@@ -89,9 +93,16 @@ export const Home = () => {
           </div>
         )}
         {isLogged && !isBoardJoined && isBoardCreated && (
-          <div className="nes-container container">
+          <div className="nes-container container animate__animated animate__rubberBand">
             <h4>Código del juego:</h4>
-            <p>{`${board.token}`}</p>
+            <p style={{color: "red"}}>
+              <span>
+                <i className="nes-icon coin " />
+              </span>{" "}
+              {`${board.token}`}
+              <span /> <i className="nes-icon coin " />
+            </p>
+            <p>Esperando jugador 2...</p>
           </div>
         )}
         {isLogged && !isBoardCreated && currentPath == "/" && (

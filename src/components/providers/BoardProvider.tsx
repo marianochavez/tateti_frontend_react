@@ -11,6 +11,7 @@ interface Board {
   winner: string | null;
   turn: string;
   token: string;
+  myTurn: boolean;
   X: string;
   O: string;
 }
@@ -25,7 +26,7 @@ interface BoardContext {
   playIn: (index: number, players: Player) => void;
   clearBoard: () => void;
   checkWinner: () => void;
-  getHistorical: (id1: number, id2: number) => Promise<any>;
+  getHistorical: (username1: string, username2: string) => Promise<any>;
   leaveBoard: (token: string) => Promise<any>;
   userCreateBoard: (token: string) => Promise<any>;
   userJoinGame: (token: string, boardToken: string) => Promise<any>;
@@ -42,6 +43,7 @@ export const BoardContext = createContext<BoardContext>({
     table: [],
     state: "",
     winner: null,
+    myTurn: false,
     turn: "",
     token: "",
     X: "",
@@ -113,17 +115,16 @@ export const BoardProvider = ({children}: Props) => {
   };
 
   const playIn = async (index: number, player: Player) => {
-    const playerTurn = player[parseInt(Object.keys(player)[0])];
+    if (board.myTurn) {
+      const playerTurn = player[parseInt(Object.keys(player)[0])];
 
-    const playerPlay = await play(board.id, playerTurn.token, index);
+      const playerPlay = await play(board.id, playerTurn.token, index);
 
-    if (playerPlay.board) {
-      setBoard(playerPlay.board);
-      setSquares(playerPlay.board.table);
-      setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
-    } else {
-      // eslint-disable-next-line no-console
-      console.log(playerPlay);
+      if (playerPlay?.board) {
+        setBoard(playerPlay.board);
+        setSquares(playerPlay.board.table);
+        setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+      }
     }
   };
 
@@ -141,6 +142,7 @@ export const BoardProvider = ({children}: Props) => {
       winner: null,
       turn: "",
       token: "",
+      myTurn: false,
       X: "",
       O: "",
     });
@@ -149,8 +151,8 @@ export const BoardProvider = ({children}: Props) => {
     setWinner(null);
   };
 
-  const getHistorical = async (id1: number, id2: number) => {
-    const historicalBoards = await historical(id1, id2);
+  const getHistorical = async (username1: string, username2: string) => {
+    const historicalBoards = await historical(username1, username2);
 
     if (historicalBoards) {
       return historicalBoards;

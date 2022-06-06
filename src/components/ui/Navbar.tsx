@@ -11,6 +11,9 @@ export const Navbar = () => {
     <>
       <nav className="nav-wrapper">
         <h2 className="animate__animated animate__bounce">
+          <span>
+            <i className="nes-logo" />
+          </span>
           <span style={{color: "#6639A6"}}>T</span>a<span style={{color: "#3490DE"}}>T</span>e
           <span style={{color: "#6FE7DD"}}>T</span>i
         </h2>
