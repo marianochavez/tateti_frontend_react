@@ -4,7 +4,7 @@ import {useContext} from "react";
 import {UserContext} from "../providers/UserProvider";
 
 export const Navbar = () => {
-  const {isLogged} = useContext(UserContext);
+  const {player, isLogged} = useContext(UserContext);
   const currentPath = useLocation().pathname;
 
   return (
@@ -17,6 +17,16 @@ export const Navbar = () => {
           <span style={{color: "#6639A6"}}>T</span>a<span style={{color: "#3490DE"}}>T</span>e
           <span style={{color: "#6FE7DD"}}>T</span>i
         </h2>
+        {isLogged && (
+          <p className="nes-badge is-splited animate__animated animate__fadeIn animate__slow">
+            <span className="is-primary">
+              <i className="nes-icon heart is-small" />
+              <i className="nes-icon is-half heart is-small" />
+              <i className="nes-icon heart is-transparent is-small" />
+            </span>
+            <span className="is-dark">{`${player[parseInt(Object.keys(player)[0])].name}`}</span>
+          </p>
+        )}
         <ul className="ul-nav">
           {currentPath !== "/" && (
             <li className="li-nav">
