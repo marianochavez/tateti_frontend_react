@@ -41,7 +41,10 @@ export const Home = () => {
 
   const handleJoinBoard = async () => {
     if (boardToken.length === 0) return;
-    const res = await userJoinGame(player[parseInt(Object.keys(player)[0])].token, boardToken);
+    const res = await userJoinGame(
+      player[parseInt(Object.keys(player)[0])].token,
+      boardToken.trim(),
+    );
 
     !res ? setError(true) : setError(false);
     handleCheckBoard();
@@ -87,7 +90,7 @@ export const Home = () => {
               value={boardToken}
               onChange={handleInputChange as React.ChangeEventHandler<HTMLInputElement>}
             />
-            <button className="nes-btn is-primary" onClick={handleJoinBoard}>
+            <button className="nes-btn is-warning" onClick={handleJoinBoard}>
               Unirme
             </button>
           </div>
